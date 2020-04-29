@@ -1,7 +1,14 @@
 
 #include "Runtime.h"
 #include "cpproc.h"
+#include "tcvm.h"
 #include <sys/types.h>
+#include <dlfcn.h>
+#include <string.h>
+#include <stdio.h>
+#include "xtypes.h"
+#include "../../util/nativelib.h"
+void * handle;
 
 TC_API void jlR_exec_SSs(NMParams p) {
     int fds[CPIO_EXEC_NUM_PIPES];
@@ -113,4 +120,21 @@ TC_API void jlR_exec_SSs(NMParams p) {
     ProcessImpl_outputStream(process) = fileOutputStream;
     ProcessImpl_errorStream(process) = fileErrInputStream;
     p->retO = process;
+}
+/* Function: jlR_exec_SSs
+ *  Load a library with name provided in p->obj[1] 
+ *      
+ *  p: parameters that comes from java/lang/Runtime loadlibrary(String libname);
+ * 
+ *  returns: void
+ */
+TC_API void jlR_loadLibrary_s(NMParams p) {
+    TCObject libnameStrObj = p->obj[1];
+    char * libname = String2CharP(libnameStrObj); 
+    handle = loadLibrary(libname);
+    if(!handle) {
+        char errorMessage[PATH_MAX];
+        xstrprintf(errorMessage, "Could not find lib%s.so",libname);
+        throwException(p->currentContext, RuntimeException, errorMessage);
+    }
 }
