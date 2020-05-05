@@ -17,6 +17,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+// tcni.c
+extern Hashtable htLoadedLibraries;
 
 // tcclass.c
 extern Hashtable htLoadedClasses;
