@@ -51,6 +51,7 @@ typedef struct
    int32 size;
    int32 hash;
    int32 threshold;
+   int32 initialized;
    Heap heap;
 } Hashtable;
 
