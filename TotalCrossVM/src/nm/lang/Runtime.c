@@ -9,12 +9,6 @@
 #include "xtypes.h"
 #include "../../util/nativelib.h"
 #include "utils.h"
-#include <dlfcn.h>
-#include <string.h>
-#include <stdio.h>
-#include "xtypes.h"
-#include "../../util/nativelib.h"
-void * handle;
 
 TC_API void jlR_exec_SSs(NMParams p) {
     int fds[CPIO_EXEC_NUM_PIPES];
@@ -135,12 +129,38 @@ TC_API void jlR_exec_SSs(NMParams p) {
  *  returns: void
  */
 TC_API void jlR_loadLibrary_s(NMParams p) {
+    
     TCObject libnameStrObj = p->obj[1];
-    char * libname = String2CharP(libnameStrObj); 
+    if(!libnameStrObj) {
+        throwException(p->currentContext, NullPointerException, "libname cannot be null.");
+        return;
+    }
+    char * libname = String2CharP(libnameStrObj);
+    if(!libname) {
+        throwException(p->currentContext, OutOfMemoryError, NULL);
+        goto cleanup;
+    }
+
+    
+    if(htLoadedLibraries.initialized == 1 && htGetPtr(&htLoadedLibraries, libname) == NULL) {
+        goto cleanup;    
+    }
+
+    void * handle;
     handle = loadLibrary(libname);
     if(!handle) {
         char errorMessage[PATH_MAX];
         xstrprintf(errorMessage, "Could not find lib%s.so",libname);
         throwException(p->currentContext, RuntimeException, errorMessage);
+        goto cleanup;
     }
+
+    if(htLoadedLibraries.initialized == 0) {
+        htLoadedLibraries = htNew(0xff, NULL);
+    }
+    
+    htPutPtr(&htLoadedLibraries, hashCode(libname), handle);
+    
+    cleanup:
+        xfree(libname);
 }
