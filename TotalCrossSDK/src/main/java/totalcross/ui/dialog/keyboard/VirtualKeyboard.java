@@ -140,6 +140,7 @@ public class VirtualKeyboard extends Window {
     }
     if (imgCancel != null) {
       btCancel = new Button(imgCancel);
+      btCancel.setDoEffect(false);
       btCancel.transparentBackground = true;
       btCancel.setBorder(BORDER_NONE);
       btCancel.setBorder(Button.BORDER_3D_VERTICAL_GRADIENT);
@@ -155,6 +156,7 @@ public class VirtualKeyboard extends Window {
     clrIcon.setForeColor(iconColor );
     if (imgBackSpace != null) {
       btDel = new Button(imgBackSpace);
+      btDel.setDoEffect(false);
       btDel.setBorder(Button.BORDER_3D_VERTICAL_GRADIENT);
       btDel.bottomColor3DG = Color.WHITE;
       btDel.topColor3DG = Color.WHITE;
@@ -165,6 +167,7 @@ public class VirtualKeyboard extends Window {
     }
     if (imgAbc != null) {
       btnAbc = new Button(imgAbc);
+      btnAbc.setDoEffect(false);
       btnAbc.setBorder(Button.BORDER_3D_VERTICAL_GRADIENT);
       btnAbc.bottomColor3DG = Color.WHITE;
       btnAbc.topColor3DG = Color.WHITE;
@@ -175,6 +178,7 @@ public class VirtualKeyboard extends Window {
     }
     if (img123 != null) {
       btn123 = new Button(img123);
+      btn123.setDoEffect(false);
       btn123.setBorder(Button.BORDER_3D_VERTICAL_GRADIENT);
       btn123.bottomColor3DG = Color.WHITE;
       btn123.topColor3DG = Color.WHITE;
